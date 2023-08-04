@@ -1,0 +1,22 @@
+$mainColor: #fff;
+$yellow: #cf0;
+$gray: #242424;
+
+$fontFamily: "Imprima", Helvetica;
+$fontSize: rem(18);
+
+$minWidth: 320;
+// Ширина полотна (макету)
+$maxWidth: 1920;
+// Ширина обмежуючого контейнера (0 = немає обмеження)
+$maxWidthContainer: 1620;
+// Загальний відступ у контейнера
+$containerPadding: 30;
+
+// Ширина спрацьовування першого брейкпоінту
+$containerWidth: $maxWidthContainer + $containerPadding;
+
+$pc: em($containerWidth); // ПК, ноутбуки, деякі планшети у горизонтальному положенні
+$tablet: em(991.98); // Планшети, деякі телефони в горизонтальному положенні
+$mobile: em(767.98); // Телефони L
+$mobileSmall: em(479.98); // Телефони S

@@ -1,0 +1,63 @@
+@use "sass:math";
+
+@import url(https://fonts.googleapis.com/css?family=Imprima:regular);
+@import url(https://fonts.googleapis.com/css?family=IM+Fell+French+Canon:regular,italic);
+
+@import "./Styles/mixins";
+@import "./Styles/variables";
+@import "./Styles/default";
+
+[class*="__container"] {
+    @if ($maxWidthContainer>0) {
+        max-width: rem($containerWidth);
+        margin: 0 auto;
+    }
+    @if ($containerPadding>0) {
+        @if ($maxWidthContainer>0) {
+            padding: 0 rem(math.div($containerPadding, 2));
+        } @else {
+            @include adaptiveValue("padding-left", math.div($containerPadding, 2), 15);
+            @include adaptiveValue("padding-right", math.div($containerPadding, 2), 15);
+        }
+    }
+}
+
+@import "./Styles/header";
+@import "./Styles/main";
+@import "./Styles/common";
+
+/* width */
+::-webkit-scrollbar {
+    width: rem(5);
+    height: rem(7);
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: $gray;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: $yellow;
+    background-color: #555;
+    border-radius: rem(3);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #757575;
+}
+
+body {
+    // animation: rotate 5s linear infinite alternate;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotateY(0deg) rotateX(0deg);
+    }
+    to {
+        transform: rotateY(360deg) rotateX(360deg);
+    }
+}

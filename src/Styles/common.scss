@@ -1,0 +1,152 @@
+.up-btn {
+    position: fixed;
+    right: rem(50);
+    bottom: rem(50);
+    height: rem(70);
+    width: rem(70);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgb(204, 204, 204);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 5;
+    &:hover {
+        background-color: $yellow;
+        border-color: $yellow;
+        color: black;
+    }
+}
+
+.btn {
+    border-radius: 20.101px;
+    border: 2px solid #cf0;
+    padding: 0.625rem 1.25rem;
+    text-transform: capitalize;
+    transition: all 0.3s;
+    cursor: pointer;
+    white-space: nowrap;
+    display: block;
+    @include adaptiveValue("font-size", 18, 14);
+    &:hover {
+        background-color: #cf0;
+        color: #000;
+        border-color: $yellow;
+    }
+
+    &-white-border {
+        border-color: rgb(204, 204, 204);
+    }
+}
+
+.horizontal-slider {
+    max-width: 100%;
+    height: rem(20);
+    color: black;
+    // display: block;
+    .example-track {
+        top: 50%;
+        transform: translateY(-50%);
+        height: rem(6);
+        background-color: black;
+        border-radius: rem(4);
+        &-1 {
+            background-color: royalblue;
+        }
+    }
+
+    .example-thumb {
+        // padding: rem(2) rem(5);
+        width: rem(30);
+        height: rem(20);
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: $yellow;
+        cursor: pointer;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: rem(4);
+        font-size: rem(14);
+        line-height: 0.5;
+    }
+
+    &-single {
+        .example-track {
+            background-color: royalblue;
+            &-1 {
+                background-color: black;
+            }
+        }
+    }
+}
+
+body .select {
+    &__menu {
+        background-color: black;
+        border-radius: rem(4);
+    }
+    &__control {
+        background-color: transparent;
+        flex-wrap: nowrap;
+        cursor: pointer;
+        @include adaptiveValue("font-size", 16, 14);
+    }
+
+    &__value-container {
+        // width: max-content;
+        width: rem(43);
+    }
+
+    &__input-container {
+        color: white;
+    }
+
+    &__single-value {
+        color: white;
+    }
+    &__option {
+        transition: all 0.2s ease 0s;
+        cursor: pointer;
+        &--is-focused {
+            background-color: $gray;
+        }
+        &--is-selected {
+            background-color: royalblue;
+        }
+    }
+}
+
+summary {
+    cursor: pointer;
+    user-select: none;
+    display: block;
+}
+
+.switcher {
+    display: flex;
+    position: relative;
+    &__element {
+        padding: rem(10) rem(15);
+        user-select: none;
+        cursor: pointer;
+    }
+
+    &__bg {
+        border-radius: rem(15);
+        background-color: #000000;
+        position: absolute;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+}
+
+.title {
+    @include adaptiveValue("font-size", 36, 24);
+}
