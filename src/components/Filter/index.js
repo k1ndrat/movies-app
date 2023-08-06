@@ -72,43 +72,9 @@ const Filter = ({
             }
         };
 
-        console.log(genresFilt);
+        // console.log(genresFilt);
         fetchGenres();
     }, [setGenresList, language, type]);
-
-    // useEffect(() => {
-    //     // setPagee(0);
-    //     // setMovies([]);
-
-    //     setGenresFilt([]);
-    //     setSortFilt("popularity.desc");
-    //     setVoteCountFilt({
-    //         lte: null,
-    //         gte: null,
-    //     });
-    //     setRuntimeFilt({
-    //         lte: null,
-    //         gte: null,
-    //     });
-    //     setUserScoreFilt({
-    //         lte: null,
-    //         gte: null,
-    //     });
-    //     setGenres([]);
-    //     setSort("popularity.desc");
-    //     setVoteCount({
-    //         lte: null,
-    //         gte: null,
-    //     });
-    //     setRuntime({
-    //         lte: null,
-    //         gte: null,
-    //     });
-    //     setUserScore({
-    //         lte: null,
-    //         gte: null,
-    //     });
-    // }, [language]);
 
     const onClick = (id) => {
         genresFilt.includes(id)
@@ -146,14 +112,6 @@ const Filter = ({
         <div className="main__filter filter">
             {!error && !isLoadingGenres && (
                 <div className="filter__wrapper">
-                    {/* <details>
-                        <summary>social</summary>
-                        <p>1</p>
-                        <p>2</p>
-                        <p>3</p>
-                        <p>4</p>
-                        <p>5</p>
-                    </details> */}
                     <div className="filter__sorting">
                         <div className="filter__body">
                             <div className="filter__title">Sorting</div>

@@ -136,15 +136,18 @@ const Movies = () => {
         <motion.div
             initial={{
                 opacity: 0,
-                transform: "translateX(-200px)",
+                x: -200,
             }}
             animate={{
                 opacity: 1,
-                transform: "translateX(0px)",
+                x: 0,
             }}
             exit={{
                 opacity: 0,
-                transform: "translateX(200px)",
+                x: 200,
+            }}
+            transition={{
+                type: "tween",
             }}
         >
             <div className="main__container">

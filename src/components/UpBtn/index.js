@@ -3,7 +3,7 @@ const UpBtn = () => {
         <div
             className="up-btn"
             onClick={() => {
-                console.log(window.pageYOffset);
+                // console.log(window.pageYOffset);
                 window.scrollTo({
                     top: 0,
                     left: 0,

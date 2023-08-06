@@ -12,13 +12,14 @@ import { AppContext } from "../../providers/context";
 import { useRef, useState, useEffect, useContext, useCallback } from "react";
 
 const Movies = () => {
+    console.log("render");
+
     // url-params
     let [searchParams, setSearchParams] = useSearchParams();
 
     const pageCount = useRef(0);
 
     const { language } = useContext(AppContext).state;
-    const { dispatch } = useContext(AppContext);
 
     const [pagee, setPagee] = useState(1);
     const [movies, setMovies] = useState([]);
@@ -32,7 +33,7 @@ const Movies = () => {
         searchParams.get("sort_by") || "popularity.desc"
     );
     const [genres, setGenres] = useState(
-        searchParams.get("with_genres")?.split("%2C") || []
+        searchParams.get("with_genres")?.split(",") || []
     );
     const [voteCount, setVoteCount] = useState({
         lte: searchParams.get("vote_count.lte") || null,
@@ -49,7 +50,6 @@ const Movies = () => {
 
     useEffect(() => {
         const createQuery = () => {
-            // const currentDate = new Date().toISOString().split("T")[0]; // Get the current date in the format YYYY-MM-DD
             const urlQuery =
                 (genres.length ? `&with_genres=${genres.join(",")}` : "") +
                 (sort ? `&sort_by=${sort}` : "") +
@@ -65,11 +65,6 @@ const Movies = () => {
                 (pagee ? `&page=${pagee}` : "") +
                 `&region=ua` +
                 urlQuery;
-            // (currentDate
-            //     ? `&primary_release_date.lte=${currentDate}`
-            //     : "") +
-
-            // console.log(query);
 
             return { query, urlQuery };
         };
@@ -89,13 +84,25 @@ const Movies = () => {
                 const { query, urlQuery } = createQuery();
                 const response = await api.get(`discover/movie${query}`);
 
-                setSearchParams(urlQuery);
+                // change url only wnen change filter & sort
+                if (
+                    searchParams.get("sort_by") !== sort ||
+                    (searchParams.get("with_genres") !== genres.join(",") &&
+                        genres.join(",") !== "") ||
+                    searchParams.get("vote_count.lte") !== voteCount.lte ||
+                    searchParams.get("vote_count.gte") !== voteCount.gte ||
+                    searchParams.get("with_runtime.lte") !== runtime.lte ||
+                    searchParams.get("with_runtime.gte") !== runtime.gte ||
+                    searchParams.get("vote_average.lte") !== userScore.lte ||
+                    searchParams.get("vote_average.gte") !== userScore.gte
+                ) {
+                    setSearchParams(urlQuery);
+                }
 
                 if (response.data.results.length > 0) {
                     if (pagee === 1) {
                         setMovies(response.data.results);
                         pageCount.current = response.data.total_pages;
-                        // console.log(pageCount.current);
                     } else {
                         setMovies((prevMovies) => [
                             ...prevMovies,
@@ -117,17 +124,7 @@ const Movies = () => {
         };
 
         fetchMovies();
-    }, [
-        pagee,
-        sort,
-        genres,
-        voteCount,
-        runtime,
-        userScore,
-        setPagee,
-        setMovies,
-        setIsLoadingMovies,
-    ]);
+    }, [pagee, setPagee, setMovies, setIsLoadingMovies]);
 
     const handleScroll = useCallback(() => {
         if (isLoadingMovies || pagee >= pageCount.current || pagee === 0)
@@ -156,17 +153,19 @@ const Movies = () => {
         <motion.div
             initial={{
                 opacity: 0,
-                transform: "translateX(-200px)",
+                x: -200,
             }}
             animate={{
                 opacity: 1,
-                transform: "translateX(0)",
+                x: 0,
             }}
             exit={{
                 opacity: 0,
-                transform: "translateX(200px)",
+                x: 200,
             }}
-            // transition={{ duration: 0.5 }}
+            transition={{
+                type: "tween",
+            }}
         >
             <div className="main__container">
                 <Filter
