@@ -8,6 +8,8 @@ import { AppContext } from "../../providers/context";
 
 import api from "../../api/movies";
 
+import Loader from "../Loader";
+
 const MovieDetail = () => {
     const { id } = useParams();
 
@@ -46,20 +48,23 @@ const MovieDetail = () => {
         <motion.div
             initial={{
                 opacity: 0,
-                transform: "translateX(-200px)",
+                x: -200,
             }}
             animate={{
                 opacity: 1,
-                transform: "translateX(0px)",
+                x: 0,
             }}
             exit={{
                 opacity: 0,
-                transform: "translateX(200px)",
+                x: 200,
+            }}
+            transition={{
+                type: "tween",
             }}
         >
             <section className="movie">
                 <div className="movie__container">
-                    {!isLoadingMovie && (
+                    {!error && !isLoadingMovie && (
                         <div className="movie__item">
                             <div className="movie__poster">
                                 <img
@@ -92,6 +97,9 @@ const MovieDetail = () => {
                             </div>
                         </div>
                     )}
+
+                    {error && <div>{error.message}</div>}
+                    {isLoadingMovie && <Loader />}
                 </div>
             </section>
         </motion.div>

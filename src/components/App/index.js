@@ -42,11 +42,11 @@ function App() {
                     languages: response.data,
                 });
 
-                console.log(response.data);
+                // console.log(response.data);
                 setError("");
             } catch (error) {
                 setError(error);
-                console.log(error);
+                // console.log(error);
             } finally {
                 setIsLoadingLanguage(false);
             }
