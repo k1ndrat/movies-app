@@ -32,6 +32,7 @@
     &__movies {
         flex-grow: 1;
         position: relative;
+        // z-index: 1;
     }
     &__list {
         display: grid;
@@ -218,13 +219,15 @@
 }
 
 .filter {
-    position: sticky;
-    top: rem(100);
     align-self: flex-start;
     overflow-y: auto;
     padding-right: rem(10);
-    max-height: calc(100vh - rem(200));
-    z-index: 2;
+    z-index: 1;
+    @media (min-width: $mobile) {
+        position: sticky;
+        top: rem(100);
+        max-height: calc(100vh - rem(200));
+    }
     &__wrapper {
         display: flex;
         flex-direction: column;
