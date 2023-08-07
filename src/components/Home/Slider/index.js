@@ -66,8 +66,8 @@ const Slider = () => {
                         // onSlideChange={() => console.log("slide change")}
                         // onSwiper={(swiper) => console.log(swiper)}
                     >
-                        {movies.map((movie) => (
-                            <SwiperSlide>
+                        {movies.map((movie, index) => (
+                            <SwiperSlide key={index}>
                                 <SlideContent movie={movie} />
                             </SwiperSlide>
                         ))}
