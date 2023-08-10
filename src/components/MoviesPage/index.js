@@ -2,14 +2,19 @@ import ItemMovie from "../ItemMovie";
 import Filter from "../Filter";
 import Loader from "../Loader";
 
+import api from "../../api/movies";
+
 import { motion } from "framer-motion";
 
-import api from "../../api/movies";
+import { useSearchParams } from "react-router-dom";
 
 import { AppContext } from "../../providers/context";
 import { useRef, useState, useEffect, useContext, useCallback } from "react";
 
-const Movies = () => {
+const MoviesPage = ({ type }) => {
+    // url-params
+    let [searchParams, setSearchParams] = useSearchParams();
+
     const pageCount = useRef(0);
 
     const { language } = useContext(AppContext).state;
@@ -22,28 +27,30 @@ const Movies = () => {
     const [isLoadingMovies, setIsLoadingMovies] = useState(true);
 
     // sorting & filtering
-    const [sort, setSort] = useState("popularity.desc");
-    const [genres, setGenres] = useState([]);
+    const [sort, setSort] = useState(
+        searchParams.get("sort_by") || "popularity.desc"
+    );
+    const [genres, setGenres] = useState(
+        searchParams.get("with_genres")?.split(",") || []
+    );
     const [voteCount, setVoteCount] = useState({
-        lte: null,
-        gte: null,
+        lte: searchParams.get("vote_count.lte") || null,
+        gte: searchParams.get("vote_count.gte") || null,
     });
     const [runtime, setRuntime] = useState({
-        lte: null,
-        gte: null,
+        lte: searchParams.get("with_runtime.lte") || null,
+        gte: searchParams.get("with_runtime.gte") || null,
     });
     const [userScore, setUserScore] = useState({
-        lte: null,
-        gte: null,
+        lte: searchParams.get("vote_average.lte") || null,
+        gte: searchParams.get("vote_average.gte") || null,
     });
+
+    // console.log("render", pagee, movies, error, isLoadingMovies);
 
     useEffect(() => {
         const createQuery = () => {
-            const query =
-                "?language=" +
-                language +
-                (pagee ? `&page=${pagee}` : "") +
-                `&watch_region=ua` +
+            const urlQuery =
                 (genres.length ? `&with_genres=${genres.join(",")}` : "") +
                 (sort ? `&sort_by=${sort}` : "") +
                 (voteCount.lte ? `&vote_count.lte=${voteCount.lte}` : "") +
@@ -52,10 +59,14 @@ const Movies = () => {
                 (runtime.gte ? `&with_runtime.gte=${runtime.gte}` : "") +
                 (userScore.lte ? `&vote_average.lte=${userScore.lte}` : "") +
                 (userScore.gte ? `&vote_average.gte=${userScore.gte}` : "");
-
-            console.log(query);
-
-            return query;
+            const query =
+                "?language=" +
+                language +
+                (pagee ? `&page=${pagee}` : "") +
+                (type === "movie"
+                    ? `&region=ua` + urlQuery
+                    : `&watch_region=ua` + urlQuery);
+            return { query, urlQuery };
         };
 
         const fetchMovies = async () => {
@@ -70,19 +81,37 @@ const Movies = () => {
                     return;
                 }
 
-                const response = await api.get(`discover/tv${createQuery()}`);
+                const { query, urlQuery } = createQuery();
+                const response = await api.get(`discover/${type}${query}`);
 
+                // change url only wnen change filter & sort
+                if (
+                    searchParams.get("sort_by") !== sort ||
+                    (searchParams.get("with_genres") !== genres.join(",") &&
+                        genres.join(",") !== "") ||
+                    searchParams.get("vote_count.lte") !== voteCount.lte ||
+                    searchParams.get("vote_count.gte") !== voteCount.gte ||
+                    searchParams.get("with_runtime.lte") !== runtime.lte ||
+                    searchParams.get("with_runtime.gte") !== runtime.gte ||
+                    searchParams.get("vote_average.lte") !== userScore.lte ||
+                    searchParams.get("vote_average.gte") !== userScore.gte
+                ) {
+                    setSearchParams(urlQuery);
+                }
+
+                // console.log(response.data.results);
                 if (response.data.results.length > 0) {
-                    pagee === 1
-                        ? setMovies(response.data.results)
-                        : setMovies((prevMovies) => [
-                              ...prevMovies,
-                              ...response.data.results,
-                          ]);
+                    if (pagee === 1) {
+                        setMovies(response.data.results);
+                        pageCount.current = response.data.total_pages;
+                    } else {
+                        setMovies((prevMovies) => [
+                            ...prevMovies,
+                            ...response.data.results,
+                        ]);
+                    }
 
-                    pageCount.current = response.data.total_pages;
                     setError("");
-                    console.log(pageCount.current);
                 } else {
                     if (pagee === 1) {
                         throw new Error("No movies found");
@@ -96,18 +125,7 @@ const Movies = () => {
         };
 
         fetchMovies();
-    }, [
-        pagee,
-        setPagee,
-        setMovies,
-        setIsLoadingMovies,
-        sort,
-        genres,
-        language,
-        voteCount,
-        runtime,
-        userScore,
-    ]);
+    }, [pagee, setPagee, setMovies, setIsLoadingMovies]);
 
     const handleScroll = useCallback(() => {
         if (isLoadingMovies || pagee >= pageCount.current || pagee === 0)
@@ -116,7 +134,7 @@ const Movies = () => {
         const { scrollTop, clientHeight, scrollHeight } =
             document.documentElement;
         if (
-            scrollHeight - scrollTop <= clientHeight + 120 &&
+            scrollHeight - scrollTop <= clientHeight + 150 &&
             !isLoadingMovies
         ) {
             setPagee(+pagee + 1);
@@ -163,7 +181,7 @@ const Movies = () => {
                     runtime={runtime}
                     setRuntime={setRuntime}
                     setUserScore={setUserScore}
-                    type={"tv"}
+                    type={type}
                 />
 
                 <div className="main__movies">
@@ -176,7 +194,7 @@ const Movies = () => {
                                 <ItemMovie
                                     key={index}
                                     movie={movie}
-                                    type={"tv"}
+                                    type={type}
                                 />
                             ))}
                         </ul>
@@ -188,4 +206,4 @@ const Movies = () => {
     );
 };
 
-export default Movies;
+export default MoviesPage;

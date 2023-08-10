@@ -33,7 +33,6 @@ const Slider = () => {
 
                 if (response.data.results.length > 0) {
                     setMovies(response.data.results);
-
                     setError("");
                 } else {
                     throw new Error("No movies found");

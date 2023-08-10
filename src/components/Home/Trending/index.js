@@ -29,7 +29,6 @@ const Trending = () => {
                 );
 
                 if (response.data.results.length > 0) {
-                    console.log(response.data.results);
                     setMovies(response.data.results);
                     setError("");
                 } else {
@@ -59,7 +58,9 @@ const Trending = () => {
                 <div className="trending__movies">
                     {!isLoadingMovies &&
                         !error &&
-                        movies.map((movie) => <ItemMovie movie={movie} />)}
+                        movies.map((movie, index) => (
+                            <ItemMovie key={index} movie={movie} />
+                        ))}
                     {isLoadingMovies && <Loader />}
                     {error && !isLoadingMovies && <div> {error.message}</div>}
                 </div>

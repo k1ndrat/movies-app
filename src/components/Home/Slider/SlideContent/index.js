@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const SlideContent = ({ movie }) => {
     const StyleBG = {
-        backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
+        backgroundImage: `url(https://image.tmdb.org/t/p/w1280/${movie.backdrop_path})`,
     };
     return (
         <div className="slide__content" style={StyleBG}>

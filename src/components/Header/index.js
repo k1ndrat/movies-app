@@ -17,15 +17,13 @@ const Header = () => {
     };
 
     const handleScroll = useCallback(() => {
-        const { scrollTop, clientHeight, scrollHeight } =
-            document.documentElement;
+        const { scrollTop } = document.documentElement;
 
         if (scrollTop === 0) {
             headerRef.current.classList.remove("_scroll");
         } else {
             headerRef.current.classList.add("_scroll");
         }
-        // console.log(scrollTop, clientHeight, scrollHeight);
     }, []);
 
     useEffect(() => {

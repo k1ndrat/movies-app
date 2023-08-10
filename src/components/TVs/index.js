@@ -2,19 +2,14 @@
 // import Filter from "../Filter";
 // import Loader from "../Loader";
 
-// import api from "../../api/movies";
-
 // import { motion } from "framer-motion";
 
-// import { useSearchParams } from "react-router-dom";
+// import api from "../../api/movies";
 
 // import { AppContext } from "../../providers/context";
 // import { useRef, useState, useEffect, useContext, useCallback } from "react";
 
 // const Movies = () => {
-//     // url-params
-//     let [searchParams, setSearchParams] = useSearchParams();
-
 //     const pageCount = useRef(0);
 
 //     const { language } = useContext(AppContext).state;
@@ -27,30 +22,28 @@
 //     const [isLoadingMovies, setIsLoadingMovies] = useState(true);
 
 //     // sorting & filtering
-//     const [sort, setSort] = useState(
-//         searchParams.get("sort_by") || "popularity.desc"
-//     );
-//     const [genres, setGenres] = useState(
-//         searchParams.get("with_genres")?.split(",") || []
-//     );
+//     const [sort, setSort] = useState("popularity.desc");
+//     const [genres, setGenres] = useState([]);
 //     const [voteCount, setVoteCount] = useState({
-//         lte: searchParams.get("vote_count.lte") || null,
-//         gte: searchParams.get("vote_count.gte") || null,
+//         lte: null,
+//         gte: null,
 //     });
 //     const [runtime, setRuntime] = useState({
-//         lte: searchParams.get("with_runtime.lte") || null,
-//         gte: searchParams.get("with_runtime.gte") || null,
+//         lte: null,
+//         gte: null,
 //     });
 //     const [userScore, setUserScore] = useState({
-//         lte: searchParams.get("vote_average.lte") || null,
-//         gte: searchParams.get("vote_average.gte") || null,
+//         lte: null,
+//         gte: null,
 //     });
-
-//     // console.log("render", pagee, movies, error, isLoadingMovies);
 
 //     useEffect(() => {
 //         const createQuery = () => {
-//             const urlQuery =
+//             const query =
+//                 "?language=" +
+//                 language +
+//                 (pagee ? `&page=${pagee}` : "") +
+//                 `&watch_region=ua` +
 //                 (genres.length ? `&with_genres=${genres.join(",")}` : "") +
 //                 (sort ? `&sort_by=${sort}` : "") +
 //                 (voteCount.lte ? `&vote_count.lte=${voteCount.lte}` : "") +
@@ -59,14 +52,10 @@
 //                 (runtime.gte ? `&with_runtime.gte=${runtime.gte}` : "") +
 //                 (userScore.lte ? `&vote_average.lte=${userScore.lte}` : "") +
 //                 (userScore.gte ? `&vote_average.gte=${userScore.gte}` : "");
-//             const query =
-//                 "?language=" +
-//                 language +
-//                 (pagee ? `&page=${pagee}` : "") +
-//                 `&region=ua` +
-//                 urlQuery;
 
-//             return { query, urlQuery };
+//             console.log(query);
+
+//             return query;
 //         };
 
 //         const fetchMovies = async () => {
@@ -81,37 +70,19 @@
 //                     return;
 //                 }
 
-//                 const { query, urlQuery } = createQuery();
-//                 const response = await api.get(`discover/movie${query}`);
+//                 const response = await api.get(`discover/tv${createQuery()}`);
 
-//                 // change url only wnen change filter & sort
-//                 if (
-//                     searchParams.get("sort_by") !== sort ||
-//                     (searchParams.get("with_genres") !== genres.join(",") &&
-//                         genres.join(",") !== "") ||
-//                     searchParams.get("vote_count.lte") !== voteCount.lte ||
-//                     searchParams.get("vote_count.gte") !== voteCount.gte ||
-//                     searchParams.get("with_runtime.lte") !== runtime.lte ||
-//                     searchParams.get("with_runtime.gte") !== runtime.gte ||
-//                     searchParams.get("vote_average.lte") !== userScore.lte ||
-//                     searchParams.get("vote_average.gte") !== userScore.gte
-//                 ) {
-//                     setSearchParams(urlQuery);
-//                 }
-
-//                 // console.log(response.data.results);
 //                 if (response.data.results.length > 0) {
-//                     if (pagee === 1) {
-//                         setMovies(response.data.results);
-//                         pageCount.current = response.data.total_pages;
-//                     } else {
-//                         setMovies((prevMovies) => [
-//                             ...prevMovies,
-//                             ...response.data.results,
-//                         ]);
-//                     }
+//                     pagee === 1
+//                         ? setMovies(response.data.results)
+//                         : setMovies((prevMovies) => [
+//                               ...prevMovies,
+//                               ...response.data.results,
+//                           ]);
 
+//                     pageCount.current = response.data.total_pages;
 //                     setError("");
+//                     console.log(pageCount.current);
 //                 } else {
 //                     if (pagee === 1) {
 //                         throw new Error("No movies found");
@@ -125,7 +96,18 @@
 //         };
 
 //         fetchMovies();
-//     }, [pagee, setPagee, setMovies, setIsLoadingMovies]);
+//     }, [
+//         pagee,
+//         setPagee,
+//         setMovies,
+//         setIsLoadingMovies,
+//         sort,
+//         genres,
+//         language,
+//         voteCount,
+//         runtime,
+//         userScore,
+//     ]);
 
 //     const handleScroll = useCallback(() => {
 //         if (isLoadingMovies || pagee >= pageCount.current || pagee === 0)
@@ -134,7 +116,7 @@
 //         const { scrollTop, clientHeight, scrollHeight } =
 //             document.documentElement;
 //         if (
-//             scrollHeight - scrollTop <= clientHeight + 150 &&
+//             scrollHeight - scrollTop <= clientHeight + 120 &&
 //             !isLoadingMovies
 //         ) {
 //             setPagee(+pagee + 1);
@@ -181,7 +163,7 @@
 //                     runtime={runtime}
 //                     setRuntime={setRuntime}
 //                     setUserScore={setUserScore}
-//                     type={"movie"}
+//                     type={"tv"}
 //                 />
 
 //                 <div className="main__movies">
@@ -194,7 +176,7 @@
 //                                 <ItemMovie
 //                                     key={index}
 //                                     movie={movie}
-//                                     type={"movie"}
+//                                     type={"tv"}
 //                                 />
 //                             ))}
 //                         </ul>
@@ -210,8 +192,8 @@
 
 import MoviesPage from "../MoviesPage";
 
-const Movies = () => {
-    return <MoviesPage type={"movie"} />;
+const TVs = () => {
+    return <MoviesPage type={"tv"} />;
 };
 
-export default Movies;
+export default TVs;

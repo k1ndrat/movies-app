@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../providers/context";
@@ -10,13 +10,11 @@ import api from "../../api/movies";
 import Header from "../Header";
 import Home from "../Home";
 import Movies from "../Movies";
-import Shows from "../Shows";
+import TVs from "../TVs";
 import UpBtn from "../UpBtn";
 import MovieDetail from "../MovieDetail";
 
-// import bg from "./seamless-gc155f437a_640.jpg";
 import bg from "./02.jpg";
-// import bg from "./03.jpg";
 
 function App() {
     const { state, dispatch } = useContext(AppContext);
@@ -28,6 +26,7 @@ function App() {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
+    // console.log("App render", language, languages, error, isLoadingLanguage);
     useEffect(() => {
         const fetchLanguages = async () => {
             try {
@@ -42,24 +41,15 @@ function App() {
                     languages: response.data,
                 });
 
-                // console.log(response.data);
                 setError("");
             } catch (error) {
                 setError(error);
-                // console.log(error);
             } finally {
                 setIsLoadingLanguage(false);
             }
         };
 
         fetchLanguages();
-
-        // if (searchParams.get("language")) {
-        //     dispatch({
-        //         type: "changeLanguage",
-        //         language: searchParams.get("language"),
-        //     });
-        // }
     }, [setLanguages]);
 
     const style = {
@@ -81,7 +71,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/movie" element={<Movies />} />
                         <Route path="/movie/:id" element={<MovieDetail />} />
-                        <Route path="/tv" element={<Shows />} />
+                        <Route path="/tv" element={<TVs />} />
                     </Routes>
                 </AnimatePresence>
             </main>

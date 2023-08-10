@@ -58,7 +58,9 @@ const Popular = () => {
                 <div className="trending__movies">
                     {!isLoadingMovies &&
                         !error &&
-                        movies.map((movie) => <ItemMovie movie={movie} />)}
+                        movies.map((movie, index) => (
+                            <ItemMovie key={index} movie={movie} />
+                        ))}
                     {isLoadingMovies && <Loader />}
                     {error && !isLoadingMovies && <div> {error.message}</div>}
                 </div>

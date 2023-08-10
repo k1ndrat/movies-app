@@ -27,8 +27,7 @@ const MovieDetail = () => {
                 const response = await api.get(
                     `/movie/${id}?language=${language}`
                 );
-                console.log(id);
-                console.log(response.data);
+
                 if (response.data) {
                     setMovie(response.data);
                     setError("");
@@ -80,8 +79,11 @@ const MovieDetail = () => {
                                 </h2>
 
                                 <ul className="movie__genres">
-                                    {movie.genres.map((genre) => (
-                                        <li className="movie__genre">
+                                    {movie.genres.map((genre, index) => (
+                                        <li
+                                            className="movie__genre"
+                                            key={index}
+                                        >
                                             {genre.name}
                                         </li>
                                     ))}
