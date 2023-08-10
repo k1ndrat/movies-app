@@ -1,0 +1,23 @@
+name: buila and release
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3
+      
+      - name: Install dep
+        run: npm ci
+        
+      - name: build and app
+        run: npm run build
+        
+      - name: deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with: 
+          folder: dist
